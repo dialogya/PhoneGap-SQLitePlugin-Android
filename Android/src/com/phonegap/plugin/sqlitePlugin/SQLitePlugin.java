@@ -166,7 +166,7 @@ public class SQLitePlugin extends CordovaPlugin
 
     /**
      * If a prepopulated DB file exists in the assets folder it is copied to the dbPath.
-     * Only done the first time the app runs.
+     * Only runs the first time the app runs.
      */
     private void copyPrepopulatedDatabase(String completeDBName, File dbfile)
     {
