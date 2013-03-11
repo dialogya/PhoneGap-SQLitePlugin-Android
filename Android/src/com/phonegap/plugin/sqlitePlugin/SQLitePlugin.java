@@ -11,7 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.*;
 
 import java.lang.Number;
 
@@ -19,8 +19,6 @@ import java.util.HashMap;
 
 import org.apache.cordova.api.CordovaPlugin;
 import org.apache.cordova.api.CallbackContext;
-
-import android.content.Context;
 
 import android.database.Cursor;
 
@@ -154,14 +152,57 @@ public class SQLitePlugin extends CordovaPlugin
 	{
 		if (this.getDatabase(dbname) != null) this.closeDatabase(dbname);
 
-		File dbfile = this.cordova.getActivity().getDatabasePath(dbname + ".db");
+        String completeDBName = dbname + ".db";
+		File dbfile = this.cordova.getActivity().getDatabasePath(completeDBName);
+        if(!dbfile.exists())
+            copyPrepopulatedDatabase(completeDBName, dbfile);
 
-		Log.v("info", "Open sqlite db: " + dbfile.getAbsolutePath());
+        Log.v("info", "Open sqlite db: " + dbfile.getAbsolutePath());
 
 		SQLiteDatabase mydb = SQLiteDatabase.openOrCreateDatabase(dbfile, null);
 
 		dbmap.put(dbname, mydb);
 	}
+
+    private void copyPrepopulatedDatabase(String completeDBName, File dbfile)
+    {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = this.cordova.getActivity().getAssets().open(completeDBName);
+            String dbPath = dbfile.getAbsolutePath();
+            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/") + 1);
+            File dbPathFile = new File(dbPath);
+            if (!dbPathFile.exists())
+                dbPathFile.mkdirs();
+
+            File newDbFile = new File(dbPath + completeDBName);
+            out = new FileOutputStream(newDbFile);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0)
+                out.write(buf, 0, len);
+
+            Log.v("info", "Copied prepopulated DB content to: " + newDbFile.getAbsolutePath());
+        } catch (IOException e) {
+            Log.v("copyPrepopulatedDatabase", "No prepopulated DB found, Error=" + e.getMessage());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ignored) {
+                }
+            }
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
 
 	/**
 	 * Close a database.
