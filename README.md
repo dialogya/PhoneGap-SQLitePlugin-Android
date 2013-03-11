@@ -241,7 +241,7 @@ Unit testing is done in `test-www/index.html`. To run the test(s) yourself pleas
 
 # Loading pre-populated database file
 
-[Excellent directions for the Android version](http://www.raymondcamden.com/index.cfm/2012/7/27/Guest-Blog-Post-Shipping-a-populated-SQLite-DB-with-PhoneGap) have been posted recently, directions needed for iOS version. [General directions for Cordova/PhoneGap](http://gauravstomar.blogspot.com/2011/08/prepopulate-sqlite-in-phonegap.html) had been posted but seems out-of-date and does not specifically apply for this plugin.
+To include a prepopulated db, simply create the .db-file and place it directly under the assets folder in your project. The first time the app runs it will automatically be copied to the correct location.
 
 # Contributing
 
