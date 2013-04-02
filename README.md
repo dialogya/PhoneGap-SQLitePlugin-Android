@@ -6,6 +6,8 @@ Extracted from DroidGap by @brodyspark (Chris Brody)
 
 Nested transaction callback support by @marcucio
 
+Prepopulated DB support by Jarle Hansen
+
 License for this version: MIT or Apache
 
 ## Announcements
